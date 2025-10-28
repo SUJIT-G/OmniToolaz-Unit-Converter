@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniToolz ToolBox Hub | Unit Converter</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #0a1a3f;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      width: 100%;
+      background: #08132e;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #4da6ff;
+    }
+    header h1 {
+      color: #4da6ff;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    header p {
+      color: #cce0ff;
+      font-size: 0.95rem;
+      margin-top: 5px;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+    .converter-box {
+      background: #10285a;
+      border: 2px solid #4da6ff;
+      border-radius: 12px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    select, input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+    }
+    select, input {
+      background: #fff;
+      color: #000;
+    }
+    button {
+      background: #4da6ff;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #3385cc;
+    }
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      border-top: 1px solid #4da6ff;
+      background: #08132e;
+      color: #cce0ff;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OmniToolz ToolBox Hub</h1>
+    <p>Your All-in-One Smart Online Toolkit & Utilities 🚀</p>
+  </header>
+
+  <main>
+    <h2>🔢 Unit Converter</h2>
+    <div class="converter-box">
+      <select id="category">
+        <option value="length">Length</option>
+        <option value="weight">Weight</option>
+        <option value="temperature">Temperature</option>
+        <option value="energy">Energy</option>
+        <option value="time">Time</option>
+        <option value="data">Data Storage</option>
+      </select>
+
+      <input type="number" id="inputValue" placeholder="Enter value" />
+      <select id="fromUnit"></select>
+      <select id="toUnit"></select>
+      <button onclick="convert()">Convert</button>
+      <h3 id="result">Result: -</h3>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 OmniToolz ToolBox Hub. All Rights Reserved.
+  </footer>
+
+  <script>
+    const units = {
+      length: { Meter: 1, Kilometer: 1000, Centimeter: 0.01, Millimeter: 0.001, Mile: 1609.34, Yard: 0.9144, Foot: 0.3048, Inch: 0.0254 },
+      weight: { Kilogram: 1, Gram: 0.001, Pound: 0.453592, Ounce: 0.0283495 },
+      temperature: { Celsius: 'C', Fahrenheit: 'F', Kelvin: 'K' },
+      energy: { Joule: 1, Kilojoule: 1000, Calorie: 4.184, Kilocalorie: 4184, WattHour: 3600, KilowattHour: 3600000 },
+      time: { Second: 1, Minute: 60, Hour: 3600, Day: 86400 },
+      data: { Bit: 1, Byte: 8, Kilobyte: 8192, Megabyte: 8388608, Gigabyte: 8589934592, Terabyte: 8796093022208 }
+    };
+
+    const categorySelect = document.getElementById('category');
+    const fromUnitSelect = document.getElementById('fromUnit');
+    const toUnitSelect = document.getElementById('toUnit');
+
+    function populateUnits() {
+      const category = categorySelect.value;
+      const unitList = Object.keys(units[category]);
+      fromUnitSelect.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join('');
+      toUnitSelect.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join('');
+    }
+
+    categorySelect.addEventListener('change', populateUnits);
+    populateUnits();
+
+    function convert() {
+      const category = categorySelect.value;
+      const value = parseFloat(document.getElementById('inputValue').value);
+      const from = fromUnitSelect.value;
+      const to = toUnitSelect.value;
+
+      if (isNaN(value)) {
+        document.getElementById('result').innerText = 'Please enter a valid number';
+        return;
+      }
+
+      let result;
+      if (category === 'temperature') {
+        result = convertTemperature(value, from, to);
+      } else {
+        result = value * (units[category][from] / units[category][to]);
+      }
+      document.getElementById('result').innerText = `Result: ${result}`;
+    }
+
+    function convertTemperature(value, from, to) {
+      let result;
+      if (from === to) return value;
+      if (from === 'Celsius') {
+        if (to === 'Fahrenheit') result = (value * 9/5) + 32;
+        if (to === 'Kelvin') result = value + 273.15;
+      } else if (from === 'Fahrenheit') {
+        if (to === 'Celsius') result = (value - 32) * 5/9;
+        if (to === 'Kelvin') result = (value - 32) * 5/9 + 273.15;
+      } else if (from === 'Kelvin') {
+        if (to === 'Celsius') result = value - 273.15;
+        if (to === 'Fahrenheit') result = (value - 273.15) * 9/5 + 32;
+      }
+      return result;
+    }
+  </script>
+</body>
+</html>
