@@ -9,4 +9,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](./LICEN
 ## 👨‍💻 Author
 **Sujit Chowdhury**  
 OmniToolaz ToolBox Hub  
-📧 Contact: (Add your contact or GitHub profile link)
+📧 Contact: https://github.com/SUJIT-G/
+
